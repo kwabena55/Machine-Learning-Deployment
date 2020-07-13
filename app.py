@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[14]:
+# In[20]:
 
 
 import numpy as np
@@ -9,14 +9,14 @@ from flask import Flask, request,jsonify, render_template
 import pickle
 
 
-# In[15]:
+# In[21]:
 
 
 app=Flask(__name__)
 model=pickle.load(open('model.pkl','rb'))
 
 
-# In[16]:
+# In[22]:
 
 
 #Expose your model ovr an api
@@ -25,7 +25,7 @@ def home():
     return render_template('index.html')
 
 
-# In[17]:
+# In[23]:
 
 
 @app.route('/predict',methods=['POST'])
@@ -42,7 +42,20 @@ def predict():
     return render_template('index.html', prediction_text="Employee Salary is $ {}".format(output))
 
 
-# In[18]:
+# In[25]:
+
+
+@app.route('/predict_api',methods=['POST'])
+def predict_api():
+    """
+    For Direct API through request"
+    """
+    data=request.get_json(force=True)
+    prediction=model.predict([np.array(list(data.values()))])
+    output=prediction[0]
+
+
+# In[26]:
 
 
 if __name__ == "__main__":
